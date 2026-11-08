@@ -25,6 +25,7 @@
   "type": "module",
   "files": [
     "index.js",
+    "imgs/conveyor-logo.svg",
     "imgs/conveyor-logo-light.svg",
     "imgs/conveyor-logo-dark.svg",
     "CHANGELOG.md"
