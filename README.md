@@ -8,7 +8,7 @@
 # socket-conveyor-client
 
 Dependency-free JavaScript client for [Socket Conveyor](https://github.com/firebrikdotcom/socket-conveyor).
-The 2.0.0 release uses native ES modules and the standard WebSocket API.
+The 2.0.1 release candidate uses native ES modules and the standard WebSocket API.
 
 ## Requirements and installation
 
@@ -104,7 +104,7 @@ The npm package identity remains `socket-conveyor-client`; the registry lists
 `savioresende` as maintainer. No publishing workflow existed. CI deliberately
 validates only; it cannot publish. After candidate approval, an authorized maintainer
 can run the checks, `npm pack`, inspect the tarball, then publish that exact tarball
-using `npm publish ./socket-conveyor-client-2.0.0.tgz` and create tag `v2.0.0`.
+using `npm publish ./socket-conveyor-client-2.0.1.tgz` and create tag `v2.0.1`.
 Registry permissions/2FA must be verified by that maintainer before publishing.
 
 ## License

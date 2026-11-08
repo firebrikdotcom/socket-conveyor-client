@@ -2,7 +2,13 @@
 All notable changes to this project will be documented in this file.
 Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 
-## [2.0.0] - Unreleased
+## [2.0.1] - Unreleased
+
+- Finalize the new repository metadata and centered, bounded README branding.
+- Prepare the first npm 2.x publication from this exact source; preserve the existing `v2.0.0` Git tag.
+- Includes the 2.0.0 API and lifecycle changes listed below.
+
+## [2.0.0] - Git tag only; not published to npm
 
 ### Changed
 

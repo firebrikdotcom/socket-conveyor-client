@@ -1,6 +1,6 @@
 {
   "name": "socket-conveyor-client",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "A client for the PHP package firebrikdotcom/socket-conveyor",
   "main": "index.js",
   "scripts": {
