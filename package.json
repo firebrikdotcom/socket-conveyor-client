@@ -1,7 +1,7 @@
 {
   "name": "socket-conveyor-client",
   "version": "2.0.0",
-  "description": "A client for the php package kanata-php/socket-conveyor",
+  "description": "A client for the PHP package firebrikdotcom/socket-conveyor",
   "main": "index.js",
   "scripts": {
     "test": "node --test",

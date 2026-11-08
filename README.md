@@ -1,7 +1,7 @@
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="./imgs/conveyor-logo-dark.svg">
-    <img src="./imgs/conveyor-logo-light.svg" alt="Socket Conveyor — socket-conveyor-client" width="240">
+  <source media="(prefers-color-scheme: dark)" srcset="./imgs/conveyor-logo-dark.svg">
+  <img width="96" height="96" style="max-height: 96px; max-width: 96px;" src="./imgs/conveyor-logo-light.svg" alt="Socket Conveyor — socket-conveyor-client">
   </picture>
 </p>
 
