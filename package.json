@@ -1,14 +1,17 @@
 {
   "name": "socket-conveyor-client",
-  "version": "1.2.9",
+  "version": "2.0.0",
   "description": "A client for the php package kanata-php/socket-conveyor",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node --test",
+    "test:coverage": "node --test --experimental-test-coverage --test-coverage-include=index.js --test-coverage-lines=95 --test-coverage-branches=90 --test-coverage-functions=95",
+    "lint": "node --check index.js && node --check test/conveyor.test.js && node --check test/integration.test.js",
+    "prepublishOnly": "npm run lint && npm run test:coverage"
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/kanata-php/socket-conveyor-client.git"
+    "url": "git+https://github.com/firebrikdotcom/socket-conveyor-client.git"
   },
   "keywords": [
     "websocket",
@@ -16,7 +19,14 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/kanata-php/socket-conveyor-client/issues"
+    "url": "https://github.com/firebrikdotcom/socket-conveyor-client/issues"
   },
-  "homepage": "https://github.com/kanata-php/socket-conveyor-client#readme"
+  "homepage": "https://github.com/firebrikdotcom/socket-conveyor-client#readme",
+  "type": "module",
+  "files": [
+    "index.js",
+    "imgs/conveyor-logo-light.svg",
+    "imgs/conveyor-logo-dark.svg",
+    "CHANGELOG.md"
+  ]
 }

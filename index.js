@@ -26,15 +26,14 @@ class Conveyor {
         };
 
         this.ws = null;
-        this.start();
-
-        // Last 20 messages with ack status
         this.messages = [];
+        this.stopped = false;
+        this.start();
 
         if (this.options.reconnect) {
             this.healthCheckInterval = setInterval(() => {
                 if (this.isClosed()) {
-                    this.onClose();
+                    this.scheduleReconnect();
                 }
             }, this.options.healthCheckInterval);
         }
@@ -49,12 +48,12 @@ class Conveyor {
             return;
         }
 
+        this.stopped = false;
         let url = `${this.options.protocol}://${this.options.uri}:${this.options.port}`;
 
-        if (this.options.token) url += `?token=${this.options.token}`;
+        if (this.options.token) url += `?token=${encodeURIComponent(this.options.token)}`;
         if (this.options.token && this.options.query.length > 0) url += `&${this.options.query}`;
         if (!this.options.token && this.options.query.length > 0) url += `?${this.options.query}`;
-        console.log(url);
 
         this.ws = new WebSocket(url);
         this.bindEvents();
@@ -62,7 +61,10 @@ class Conveyor {
 
     bindEvents() {
         this.ws.onopen = this.options.onOpen;
-        this.ws.onclose = this.options.onClose;
+        const socket = this.ws;
+        this.ws.onclose = (e) => {
+            if (this.ws === socket) this.options.onClose(e);
+        };
         this.ws.onerror = this.options.onError;
         this.ws.onmessage = (e) => this.baseOnMessage(e);
     }
@@ -77,18 +79,43 @@ class Conveyor {
     }
 
     onClose(e) {
+        clearInterval(this.heartBeatInterval);
         if (this.ws) {
             this.ws = null;
         }
 
-        this.options.onCloseCallback();
-        if (this.options.reconnect) {
-            setTimeout(() => this.start(), this.options.reconnectDelay);
-        }
+        this.options.onCloseCallback(e);
+        this.scheduleReconnect();
+    }
+
+    scheduleReconnect() {
+        if (!this.options.reconnect || this.stopped || this.reconnectTimeout) return;
+        this.reconnectTimeout = setTimeout(() => {
+            this.reconnectTimeout = null;
+            this.start();
+        }, this.options.reconnectDelay);
+    }
+
+    close(code = 1000, reason = '') {
+        this.stopped = true;
+        clearInterval(this.healthCheckInterval);
+        clearInterval(this.heartBeatInterval);
+        clearTimeout(this.reconnectTimeout);
+        this.reconnectTimeout = null;
+        if (this.ws) this.ws.close(code, reason);
     }
 
     baseOnMessage(e) {
-        const parsedData = JSON.parse(e.data);
+        let parsedData;
+        try {
+            parsedData = JSON.parse(e.data);
+            if (parsedData === null || typeof parsedData !== 'object' || Array.isArray(parsedData)) {
+                throw new TypeError('Expected a JSON message object');
+            }
+        } catch (error) {
+            this.options.onError(error);
+            return;
+        }
 
         if (this.options.acknowledge) {
             this.messages.map((message, index) => {
@@ -103,6 +130,8 @@ class Conveyor {
     }
 
     send(message, action = 'base-action') {
+        if (!this.ws || this.ws.readyState !== WebSocket.OPEN) return;
+
         let data = {
             action,
             data: message,
@@ -127,7 +156,7 @@ class Conveyor {
     }
 
     rawSend(message) {
-        if (this.isClosed()) {
+        if (!this.ws || this.ws.readyState !== WebSocket.OPEN) {
             return;
         }
 
@@ -154,6 +183,7 @@ class Conveyor {
     }
 
     startHeartBeat() {
+        clearInterval(this.heartBeatInterval);
         if (!this.options.heartBeat) {
             return;
         }
@@ -162,7 +192,7 @@ class Conveyor {
             const pingFrame = new Uint8Array(2);
             pingFrame[0] = 0x89;
             pingFrame[1] = 0x00;
-            this.ws.send(pingFrame);
+            this.rawSend(pingFrame);
         }, this.options.heartBeatInterval);
     }
 }
